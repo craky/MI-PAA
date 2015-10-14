@@ -5,20 +5,22 @@ import java.util.List;
 
 public class Knapsack {
 	private int id;
-	private int itemSum;
+	private int size;
 	private List<KnapsackItem> items = new ArrayList<KnapsackItem>();
 	private KnapsackItem solution;
 	
 	public Knapsack(){
-		this.itemSum = 0;
+		this.size = 0;
 	}
 	
 	public void addItem(KnapsackItem item){
-		items.add(item);
+		this.items.add(item);
+		this.size++;
 	}
 	
 	public void addItem(int cost, int weight){
-		items.add(new KnapsackItem(cost,weight));
+		this.items.add(new KnapsackItem(cost,weight));
+		this.size++;
 	}
 	
 	public int getId() {
@@ -27,11 +29,11 @@ public class Knapsack {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getItemSum() {
-		return itemSum;
+	public int getSize() {
+		return size;
 	}
-	public void setItemSum(int itemSum) {
-		this.itemSum = itemSum;
+	public void setSize(int itemSum) {
+		this.size = itemSum;
 	}
 
 	public KnapsackItem getSolution() {
