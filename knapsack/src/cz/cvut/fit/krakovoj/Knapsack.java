@@ -1,10 +1,25 @@
 package cz.cvut.fit.krakovoj;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Knapsack {
 	private int id;
 	private int itemSum;
-	private KnapsackItem[] items;
+	private List<KnapsackItem> items = new ArrayList<KnapsackItem>();
 	private KnapsackItem solution;
+	
+	public Knapsack(){
+		this.itemSum = 0;
+	}
+	
+	public void addItem(KnapsackItem item){
+		items.add(item);
+	}
+	
+	public void addItem(int cost, int weight){
+		items.add(new KnapsackItem(cost,weight));
+	}
 	
 	public int getId() {
 		return id;
@@ -18,12 +33,7 @@ public class Knapsack {
 	public void setItemSum(int itemSum) {
 		this.itemSum = itemSum;
 	}
-	public KnapsackItem[] getItems() {
-		return items;
-	}
-	public void setItems(KnapsackItem[] items) {
-		this.items = items;
-	}
+
 	public KnapsackItem getSolution() {
 		return solution;
 	}

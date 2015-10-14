@@ -4,6 +4,10 @@ public class KnapsackItem {
 	private int cost;
 	private int weight;
 	
+	public KnapsackItem(int cost, int weight) {
+		this.cost = cost;
+		this.weight = weight;
+	}
 	public int getCost() {
 		return cost;
 	}
