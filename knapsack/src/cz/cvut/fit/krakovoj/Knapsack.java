@@ -23,6 +23,14 @@ public class Knapsack {
 		this.size++;
 	}
 	
+	public int getItemCost(int idx){
+		return items.get(idx).getCost();
+	}
+	
+	public int getItemWeight(int idx){
+		return items.get(idx).getWeight();
+	}
+	
 	public int getId() {
 		return id;
 	}
