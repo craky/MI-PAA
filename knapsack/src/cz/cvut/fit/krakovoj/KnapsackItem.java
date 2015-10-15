@@ -3,7 +3,6 @@ package cz.cvut.fit.krakovoj;
 public class KnapsackItem {
 	private int cost;
 	private int weight;
-	private int[] itemMap;
 	
 	public KnapsackItem(int cost, int weight) {
 		this.cost = cost;
@@ -13,24 +12,6 @@ public class KnapsackItem {
 	public KnapsackItem(){
 		this.cost = 0;
 		this.weight = 0;
-	}
-	
-	public void setItemMap(int size){
-		if (this.itemMap != null)
-			return;
-		this.itemMap = new int[size];
-	}
-	
-	public void setItem(int idx){
-		this.itemMap[idx] = 1;
-	}
-	
-	public void unsetItem(int idx){
-		this.itemMap[idx] = 0;
-	}
-	
-	public int getItem(int idx){
-		return this.itemMap[idx];
 	}
 	
 	public int getCost() {

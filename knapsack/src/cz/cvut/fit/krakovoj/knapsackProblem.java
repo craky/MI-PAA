@@ -3,7 +3,6 @@ package cz.cvut.fit.krakovoj;
 public class knapsackProblem {
 	
 	public static void main(String [] args){
-		System.out.println("Hello knapsack");
 		knapsackProblemBruteForce();
 	}
 	
@@ -14,22 +13,17 @@ public class knapsackProblem {
 		knapsack.addItem(136,42);
 		knapsack.addItem(192,88);
 		knapsack.addItem(223,3);
-		solution.setItemMap(knapsack.getSize());
 		
 		knapsackProblemBruteForceRec(knapsack,0,solution);
 	}
 	
 	public static void knapsackProblemBruteForceRec(Knapsack knapsack, int item, KnapsackItem solution){
+		KnapsackItem tempSolution = new KnapsackItem(solution.getCost(),solution.getWeight());
 		if (item >= knapsack.getSize()){
-			System.out.print("*****Sol.cost = " + solution.getCost() + " -- Sol.weight = " + solution.getWeight() + " ");
-			for(int i = 0; i < knapsack.getSize();i++){
-				System.out.print(solution.getItem(i) + "");
-			}
-			System.out.println();
+			System.out.println("*****Sol.cost = " + solution.getCost() + " -- Sol.weight = " + solution.getWeight() + " ");
 			return;
 		}
-		knapsackProblemBruteForceRec(knapsack,item+1,solution);
-		solution.setItem(item);
+		knapsackProblemBruteForceRec(knapsack,item+1,tempSolution);
 		solution.increaseCost(knapsack.getItemCost(item));
 		solution.increaseWeight(knapsack.getItemWeight(item));
 		knapsackProblemBruteForceRec(knapsack,item+1,solution);
