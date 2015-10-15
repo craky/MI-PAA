@@ -6,11 +6,13 @@ import java.util.List;
 public class Knapsack {
 	private int id;
 	private int size;
+	private int capacity;
 	private List<KnapsackItem> items = new ArrayList<KnapsackItem>();
 	private KnapsackItem solution;
 	
 	public Knapsack(){
 		this.size = 0;
+		solution = new KnapsackItem();
 	}
 	
 	public void addItem(KnapsackItem item){
@@ -37,6 +39,14 @@ public class Knapsack {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	
 	public int getSize() {
 		return size;
 	}
@@ -44,10 +54,19 @@ public class Knapsack {
 		this.size = itemSum;
 	}
 
-	public KnapsackItem getSolution() {
-		return solution;
+	public int getSolutionCost() {
+		return solution.getCost();
 	}
-	public void setSolution(KnapsackItem solution) {
-		this.solution = solution;
+	
+	public int getSolutionWeight() {
+		return solution.getWeight();
+	}
+	
+	public void setSolutionCost(int cost) {
+		solution.setCost(cost);
+	}
+	
+	public void setSolutionWeight(int weight) {
+		solution.setWeight(weight);
 	}
 }
