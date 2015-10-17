@@ -34,4 +34,9 @@ public class KnapsackItem {
 	public void increaseWeight(int newWeight){
 		this.weight += newWeight;
 	}
+	
+	public void clear(){
+		this.weight = 0;
+		this.cost = 0;
+	}
 }

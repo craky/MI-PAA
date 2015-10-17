@@ -69,4 +69,21 @@ public class Knapsack {
 	public void setSolutionWeight(int weight) {
 		solution.setWeight(weight);
 	}
+	
+	public void fillKnapsack(String[] line){
+		this.id = Integer.parseInt(line[0]);
+		this.capacity = Integer.parseInt(line[2]);
+		
+		for(int i = 3; i < line.length; i += 2){
+			addItem(Integer.parseInt(line[i+1]),Integer.parseInt(line[i]));
+		}
+	}
+	
+	public void clear(){
+		this.id = 0;
+		this.size = 0;
+		this.capacity = 0;
+		this.items.clear();
+		this.solution.clear();
+	}
 }

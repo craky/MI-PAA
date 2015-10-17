@@ -1,29 +1,48 @@
 package cz.cvut.fit.krakovoj;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+
 public class knapsackProblem {
 	
 	public static void main(String [] args){
-		knapsackProblemBruteForce();
+		try {
+			knapsackProblemBruteForce();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public static void knapsackProblemBruteForce(){
+
+	
+	public static void knapsackProblemBruteForce() throws IOException{
+		String line;
+		InputStream fis = new FileInputStream("./data/knap_4.inst.dat");
+		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
 		KnapsackItem solution = new KnapsackItem();
-		knapsack.setCapacity(100);
-		knapsack.addItem(114, 18);
-		knapsack.addItem(136,42);
-		knapsack.addItem(192,88);
-		knapsack.addItem(223,3);
 		
-		knapsackProblemBruteForceRec(knapsack,0,solution);
-		System.out.println("Best cost is " + knapsack.getSolutionCost() + " and weight is " + knapsack.getSolutionWeight());
+		while((line = br.readLine()) != null){
+			knapsack.fillKnapsack(line.split(" "));
+			knapsackProblemBruteForceRec(knapsack,0,solution);
+			System.out.println("Best cost is " + knapsack.getSolutionCost() + " and weight is " + knapsack.getSolutionWeight());
+			knapsack.clear();
+			solution.clear();
+		}
+		
+		br.close();
 	}
+	
 	
 	public static void knapsackProblemBruteForceRec(Knapsack knapsack, int item, KnapsackItem solution){
 		KnapsackItem tempSolution = new KnapsackItem(solution.getCost(),solution.getWeight());
 		if (item >= knapsack.getSize()){
-			System.out.println("*****Sol.cost = " + solution.getCost() + " -- Sol.weight = " + solution.getWeight() + " ");
-			if (solution.getCost() > knapsack.getSolutionCost() && solution.getWeight() < knapsack.getCapacity()){
+			if (solution.getCost() > knapsack.getSolutionCost() && solution.getWeight() <= knapsack.getCapacity()){
 				knapsack.setSolutionCost(solution.getCost());
 				knapsack.setSolutionWeight(solution.getWeight());
 			}
