@@ -1,6 +1,6 @@
 package cz.cvut.fit.krakovoj;
 
-public class KnapsackItem {
+public class KnapsackItem implements Comparable<KnapsackItem>{
 	private int cost;
 	private int weight;
 	
@@ -38,5 +38,13 @@ public class KnapsackItem {
 	public void clear(){
 		this.weight = 0;
 		this.cost = 0;
+	}
+	
+	public float heuristic(){
+		return this.cost/this.weight;
+	}
+	
+	public int compareTo(KnapsackItem item){
+		return Float.compare(heuristic(), item.heuristic());
 	}
 }

@@ -10,11 +10,19 @@ import java.nio.charset.Charset;
 public class knapsackProblem {
 	
 	public static void main(String [] args){
-		try {
+		Knapsack sack = new Knapsack();
+		sack.addItem(114, 18);
+		sack.addItem(136,42);
+		sack.addItem(192,88);
+		sack.addItem(223,3);
+		sack.bubbleSort();
+		sack.print();
+		
+		/*try {
 			knapsackProblemBruteForce();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 
