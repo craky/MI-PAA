@@ -104,4 +104,18 @@ public class Knapsack {
 			System.out.println("c: "+ items.get(i).getCost() + " w:" + items.get(i).getWeight() + " h:" + items.get(i).heuristic() );
 		}
 	}
+	
+	public void fillCapacity(){
+		int tmpCost = 0, tmpWeight = 0;
+		for(int i = 0; i < this.size;i++){
+			if(this.capacity < (tmpWeight + items.get(i).getWeight())){
+				continue;
+			}
+			tmpCost += items.get(i).getCost();
+			tmpWeight += items.get(i).getWeight();
+		}
+		
+		this.solution.setCost(tmpCost);
+		this.solution.setWeight(tmpWeight);
+	}
 }

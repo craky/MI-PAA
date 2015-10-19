@@ -41,7 +41,7 @@ public class KnapsackItem implements Comparable<KnapsackItem>{
 	}
 	
 	public float heuristic(){
-		return this.cost/this.weight;
+		return ((float)this.cost)/((float)this.weight);
 	}
 	
 	public int compareTo(KnapsackItem item){

@@ -9,22 +9,31 @@ import java.nio.charset.Charset;
 
 public class knapsackProblem {
 	
-	public static void main(String [] args){
-		Knapsack sack = new Knapsack();
-		sack.addItem(114, 18);
-		sack.addItem(136,42);
-		sack.addItem(192,88);
-		sack.addItem(223,3);
-		sack.bubbleSort();
-		sack.print();
-		
-		/*try {
-			knapsackProblemBruteForce();
+	public static void main(String [] args){		
+		try {
+			knapsackHeuristic();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
+	public static void knapsackHeuristic() throws IOException{
+		String line;
+		InputStream fis = new FileInputStream("./data/knap_4.inst.dat");
+		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
+		Knapsack knapsack = new Knapsack();
+		
+		while((line = br.readLine()) != null){
+			knapsack.fillKnapsack(line.split(" "));			
+			knapsack.bubbleSort();
+			knapsack.fillCapacity();
+			System.out.println("Best cost is " + knapsack.getSolutionCost() + " and weight is " + knapsack.getSolutionWeight());
+			knapsack.clear();
+		}
+		
+		br.close();
+	}
 
 	
 	public static void knapsackProblemBruteForce() throws IOException{
