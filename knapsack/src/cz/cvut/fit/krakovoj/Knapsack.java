@@ -62,6 +62,15 @@ public class Knapsack {
 		return solution.getWeight();
 	}
 	
+	public int getTotalItemsCost(){
+		int tmp = 0;
+		for (int i = 0; i < this.size;i++){
+			tmp += this.getItemCost(i);
+		}
+		
+		return tmp;
+	}
+	
 	public void setSolutionCost(int cost) {
 		solution.setCost(cost);
 	}
@@ -78,6 +87,7 @@ public class Knapsack {
 			addItem(Integer.parseInt(line[i+1]),Integer.parseInt(line[i]));
 		}
 	}
+	
 	
 	public void clear(){
 		this.id = 0;

@@ -11,8 +11,8 @@ public class knapsackProblem {
 
 	public static void main(String[] args) {
 		try {
-			knapsackHeuristic();
-			//knapsackProblemBruteForce();
+			//knapsackHeuristic();
+			knapsackProblemBruteForce();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +47,7 @@ public class knapsackProblem {
 
 	public static void knapsackProblemBruteForce() throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_25.inst.dat");
+		InputStream fis = new FileInputStream("./data/knap_15.inst.dat");
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
@@ -59,7 +59,7 @@ public class knapsackProblem {
 			knapsack.fillKnapsack(line.split(" "));
 			for (int i = 0; i <5; i++) {
 				startTime = System.currentTimeMillis();
-				knapsackProblemBruteForceRec(knapsack, 0, solution);
+				knapsackProblemBruteForceRec(knapsack, 0, solution, knapsack.getTotalItemsCost());
 				estimatedTime += System.currentTimeMillis() - startTime;
 			}
 			estimatedTime /=5;
@@ -74,7 +74,7 @@ public class knapsackProblem {
 	}
 
 	public static void knapsackProblemBruteForceRec(Knapsack knapsack,
-			int item, KnapsackItem solution) {
+			int item, KnapsackItem solution, int remainingCost) {
 		KnapsackItem tempSolution = new KnapsackItem(solution.getCost(),
 				solution.getWeight());
 		if (item >= knapsack.getSize()) {
@@ -85,10 +85,10 @@ public class knapsackProblem {
 			}
 			return;
 		}
-		knapsackProblemBruteForceRec(knapsack, item + 1, tempSolution);
+		knapsackProblemBruteForceRec(knapsack, item + 1, tempSolution, remainingCost - knapsack.getItemCost(item));
 		solution.increaseCost(knapsack.getItemCost(item));
 		solution.increaseWeight(knapsack.getItemWeight(item));
-		knapsackProblemBruteForceRec(knapsack, item + 1, solution);
+		knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
 	}
 
 }
