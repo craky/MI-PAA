@@ -47,7 +47,7 @@ public class knapsackProblem {
 
 	public static void knapsackProblemBruteForce() throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_15.inst.dat");
+		InputStream fis = new FileInputStream("./data/knap_25.inst.dat");
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
@@ -85,10 +85,12 @@ public class knapsackProblem {
 			}
 			return;
 		}
-		knapsackProblemBruteForceRec(knapsack, item + 1, tempSolution, remainingCost - knapsack.getItemCost(item));
+		if((tempSolution.getCost() + (remainingCost - knapsack.getItemCost(item))) > knapsack.getSolutionCost())
+			knapsackProblemBruteForceRec(knapsack, item + 1, tempSolution, remainingCost - knapsack.getItemCost(item));
 		solution.increaseCost(knapsack.getItemCost(item));
 		solution.increaseWeight(knapsack.getItemWeight(item));
-		knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
+		if((solution.getCost() + (remainingCost - knapsack.getItemCost(item))) > knapsack.getSolutionCost())
+			knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
 	}
 
 }
