@@ -92,5 +92,27 @@ public class knapsackProblem {
 		if((solution.getCost() + (remainingCost - knapsack.getItemCost(item))) > knapsack.getSolutionCost())
 			knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
 	}
+	
+	public static void knapsackDynamic(Knapsack knapsack){
+		
+	}
+	
+	/**
+	 * filled array
+	 * @param x_size number of columns
+	 * @param y_size number of rows
+	 * @return array[x_size, y_size] where all values are filled with 0
+	 */
+	public static int[][] filledArr(int x_size, int y_size){
+		if(x_size < 0 || y_size < 0)
+			return null;
+		int[][] ret = new int[x_size][y_size];
+		for(int i = 0; i < x_size; i++){
+			for(int j = 0; j < y_size; j++){
+				ret[i][j] = 0;
+			}
+		}
+		return ret;
+	}
 
 }
