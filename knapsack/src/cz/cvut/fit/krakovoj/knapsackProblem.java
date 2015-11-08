@@ -2,7 +2,6 @@ package cz.cvut.fit.krakovoj;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +12,8 @@ public class knapsackProblem {
 	public static void main(String[] args) {
 		try {
 			//knapsackHeuristic();
-			knapsackProblemBruteForce();
+			//knapsackProblemBruteForce();
+			knapsackDynamic("./data/knap_10.inst.dat");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -21,7 +21,7 @@ public class knapsackProblem {
 
 	public static void knapsackHeuristic() throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_40.inst.dat");
+		InputStream fis = new FileInputStream("./data/knap_10.inst.dat");
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
@@ -48,7 +48,7 @@ public class knapsackProblem {
 
 	public static void knapsackProblemBruteForce() throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_25.inst.dat");
+		InputStream fis = new FileInputStream("./data/knap_10.inst.dat");
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
@@ -103,8 +103,12 @@ public class knapsackProblem {
 		
 		while ((line = br.readLine()) != null) {
 			knapsack.fillKnapsack(line.split(" "));
-			//There will be method for dynamic coding
+			dynamicProgramming(knapsack);
+			System.out.println(knapsack.getSolutionCost());
+			knapsack.clear();
 		}
+		
+		br.close();
 	}
 	
 	/**
@@ -123,6 +127,25 @@ public class knapsackProblem {
 			}
 		}
 		return ret;
+	}
+	
+	/**
+	 * 
+	 * @param knapsack
+	 */
+	public static void dynamicProgramming(Knapsack knapsack){
+		int[][] results = filledArr(knapsack.getSize()+1, knapsack.getCapacity()+1);
+		
+		for(int i = 1; i < knapsack.getSize()+1; i++){
+			for(int j = 0; j < knapsack.getCapacity()+1; j++){
+				if(knapsack.getItemWeight(i-1) <= j)
+					results[i][j] = Math.max(results[i-1][j], results[i-1][j-knapsack.getItemWeight(i-1)] + knapsack.getItemCost(i-1));
+				else
+					results[i][j] = results[i-1][j];
+			}	
+		}
+		
+		knapsack.setSolutionCost(results[knapsack.getSize()][knapsack.getCapacity()]);		
 	}
 
 }
