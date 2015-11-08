@@ -26,5 +26,22 @@ public class knapsackProblemTest {
 		assertSame(knapsackProblem.filledArr(-1,0), null);
 		assertSame(knapsackProblem.filledArr(-9,-5), null);
 	}
+	
+	@Test
+	public void testdynamicProgramming() {
+		Knapsack knapsack = new Knapsack();
+		assertSame(knapsack.getSize(),0);
+		knapsack.addItem(1, 5);
+		assertSame(knapsack.getSize(),1);
+		knapsack.addItem(3, 1);
+		assertSame(knapsack.getSize(),2);
+		knapsack.addItem(7, 3);
+		assertSame(knapsack.getSize(),3);
+		knapsack.setCapacity(6);
+		assertSame(knapsack.getCapacity(),6);
+		
+		knapsackProblem.dynamicProgramming(knapsack);
+		assertSame(knapsack.getSolutionCost(), 10);
+	}
 
 }
