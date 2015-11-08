@@ -42,6 +42,9 @@ public class knapsackProblemTest {
 		
 		knapsackProblem.dynamicProgramming(knapsack);
 		assertSame(knapsack.getSolutionCost(), 10);
+		
+		knapsack.clear();
+		assertSame(knapsack.getSize(),0);
 	}
 
 }
