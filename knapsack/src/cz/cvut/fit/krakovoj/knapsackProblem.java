@@ -2,6 +2,7 @@ package cz.cvut.fit.krakovoj;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -93,8 +94,17 @@ public class knapsackProblem {
 			knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
 	}
 	
-	public static void knapsackDynamic(Knapsack knapsack){
+	public static void knapsackDynamic(String inputFile) throws IOException{
+		String line;
+		InputStream fis = new FileInputStream(inputFile);
+		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
+		Knapsack knapsack = new Knapsack();
 		
+		while ((line = br.readLine()) != null) {
+			knapsack.fillKnapsack(line.split(" "));
+			//There will be method for dynamic coding
+		}
 	}
 	
 	/**
