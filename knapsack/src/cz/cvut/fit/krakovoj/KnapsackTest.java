@@ -31,7 +31,7 @@ public class KnapsackTest {
 	
 	@Test
 	public void testLogb(){
-		assertEquals(Knapsack.logb(2, 3),1.5849,0.0001);
+		assertEquals(Knapsack.logb(2, 3.0),1.5849,0.0001);
 	}
 
 }

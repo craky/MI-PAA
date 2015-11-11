@@ -130,18 +130,19 @@ public class Knapsack {
 	}
 	
 	public int getShift(Double eps){
-		return -1;
+		Double tmp = (eps * getItemsMaxCost()) / this.size;
+		return Math.max((int) logb(2,tmp),0);
 	}
 	
 	public int getItemsMaxCost(){
-		int tmp = Integer.MIN_VALUE;
+		int tmp = 0;
 		for(KnapsackItem it : items)
 			tmp = Math.max(tmp, it.getCost());
 		
 		return tmp;
 	}
 	
-	public static double logb(int base, int num){
+	public static double logb(int base, Double num){
 		return Math.log(num) / Math.log(base);
 	}
 }
