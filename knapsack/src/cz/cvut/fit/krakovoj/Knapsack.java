@@ -140,4 +140,8 @@ public class Knapsack {
 		
 		return tmp;
 	}
+	
+	public static double logb(int base, int num){
+		return Math.log(num) / Math.log(base);
+	}
 }

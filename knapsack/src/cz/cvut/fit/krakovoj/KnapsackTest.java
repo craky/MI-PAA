@@ -28,5 +28,10 @@ public class KnapsackTest {
 		knapsack.addItem(3,3);
 		assertSame(knapsack.getItemsMaxCost(),5);
 	}
+	
+	@Test
+	public void testLogb(){
+		assertEquals(Knapsack.logb(2, 3),1.5849,0.0001);
+	}
 
 }
