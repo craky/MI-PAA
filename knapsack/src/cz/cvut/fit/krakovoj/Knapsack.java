@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Knapsack {
+	public static int MAX_COST = 10000;
 	private int id;
 	private int size;
 	private int capacity;
@@ -144,5 +145,20 @@ public class Knapsack {
 	
 	public static double logb(int base, Double num){
 		return Math.log(num) / Math.log(base);
+	}
+	
+	public void shiftItemsCost(int b){
+		int tmp;
+		for(KnapsackItem it : items){
+			tmp = it.getCost() >> b;
+			it.setCost(tmp);
+		}
+	}
+	public void shiftBackItemsCost(int b){
+		int tmp;
+		for(KnapsackItem it : items){
+			tmp = it.getCost() << b;
+			it.setCost(tmp);
+		}
 	}
 }

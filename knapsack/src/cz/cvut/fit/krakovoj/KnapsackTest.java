@@ -33,5 +33,13 @@ public class KnapsackTest {
 	public void testLogb(){
 		assertEquals(Knapsack.logb(2, 3.0),1.5849,0.0001);
 	}
+	
+	@Test
+	public void testshiftItemsCost(){
+		Knapsack knapsack = new Knapsack();
+		knapsack.addItem(15,1);
+		knapsack.shiftItemsCost(2);
+		assertEquals(knapsack.getItemCost(0),3);
+	}
 
 }

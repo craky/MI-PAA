@@ -15,8 +15,10 @@ public class knapsackProblem {
 			//knapsackHeuristic();
 			//knapsackProblemBruteForce();
 			//knapsackDynamic("./data/knap_10.inst.dat");
-			fptasKnapsack("./data/knap_10.inst.dat");
+			fptasKnapsack("./data/knap_10.inst.dat",0.01);
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -150,7 +152,7 @@ public class knapsackProblem {
 		knapsack.setSolutionCost(results[knapsack.getSize()][knapsack.getCapacity()]);		
 	}
 	
-	public static void fptasKnapsack(String inputFile) throws IOException{
+	public static void fptasKnapsack(String inputFile, double eps) throws Exception{
 		String line;
 		InputStream fis = new FileInputStream(inputFile);
 		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
@@ -159,13 +161,44 @@ public class knapsackProblem {
 		
 		while ((line = br.readLine()) != null) {
 			knapsack.fillKnapsack(line.split(" "));
-			
+			fptasDynamic(knapsack,eps);
 			System.out.println(knapsack.getSolutionCost());
 			knapsack.clear();
 		}
 		
 		br.close();
-		throw new UnsupportedOperationException("fptasKnapsack(String inputFile) not implemented yet.");
+	}
+	
+	public static void fptasDynamic(Knapsack knapsack, double eps) throws Exception{
+		int[][] results = filledArr(knapsack.getSize()+1, Knapsack.MAX_COST);
+		int total_cost = knapsack.getTotalItemsCost();
+		int b = knapsack.getShift(eps);
+		
+		if(total_cost >= Knapsack.MAX_COST)
+			throw new Exception("Array is going to be out of bound.");
+		
+		for(int i = 1; i < results[0].length; i++)
+			results[0][i] = Integer.MAX_VALUE/2;
+		
+		for(int i = 1; i <= knapsack.getSize(); i++){
+			for(int j = 0; j <= total_cost; j++){
+				if(knapsack.getItemCost(i-1) <= j){
+					results[i][j] = Math.min(knapsack.getItemWeight(i-1)+results[i-1][j-knapsack.getItemCost(i-1)], results[i-1][j]);
+				} else {
+					results[i][j] = results[i-1][j];
+				}
+			}
+		}
+		
+		for(int i = total_cost; i > 0; i-- ){
+			if(results[knapsack.getSize()][i] <= knapsack.getCapacity()){
+				knapsack.setSolutionCost(i);
+				knapsack.setSolutionCost(knapsack.getSolutionCost() << b);
+				break;
+			}
+		}
+		
+		knapsack.shiftBackItemsCost(b);		
 	}
 
 }
