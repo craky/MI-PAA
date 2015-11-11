@@ -2,6 +2,7 @@ package cz.cvut.fit.krakovoj;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +14,8 @@ public class knapsackProblem {
 		try {
 			//knapsackHeuristic();
 			//knapsackProblemBruteForce();
-			knapsackDynamic("./data/knap_10.inst.dat");
+			//knapsackDynamic("./data/knap_10.inst.dat");
+			fptasKnapsack("./data/knap_10.inst.dat");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -146,6 +148,24 @@ public class knapsackProblem {
 		}
 		
 		knapsack.setSolutionCost(results[knapsack.getSize()][knapsack.getCapacity()]);		
+	}
+	
+	public static void fptasKnapsack(String inputFile) throws IOException{
+		String line;
+		InputStream fis = new FileInputStream(inputFile);
+		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
+		Knapsack knapsack = new Knapsack();
+		
+		while ((line = br.readLine()) != null) {
+			knapsack.fillKnapsack(line.split(" "));
+			
+			System.out.println(knapsack.getSolutionCost());
+			knapsack.clear();
+		}
+		
+		br.close();
+		throw new UnsupportedOperationException("fptasKnapsack(String inputFile) not implemented yet.");
 	}
 
 }
