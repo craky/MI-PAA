@@ -128,4 +128,16 @@ public class Knapsack {
 		this.solution.setCost(tmpCost);
 		this.solution.setWeight(tmpWeight);
 	}
+	
+	public int getShift(Double eps){
+		return -1;
+	}
+	
+	public int getItemsMaxCost(){
+		int tmp = Integer.MIN_VALUE;
+		for(KnapsackItem it : items)
+			tmp = Math.max(tmp, it.getCost());
+		
+		return tmp;
+	}
 }
