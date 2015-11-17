@@ -7,20 +7,42 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class knapsackProblem {
-
+	private static List<String> files = fill_files();
 	public static void main(String[] args) {
 		try {
-			//knapsackHeuristic();
-			//knapsackProblemBruteForce();
-			//knapsackDynamic("./data/knap_10.inst.dat");
-			fptasKnapsack("./data/knap_10.inst.dat",0.01);
+			for(String st : files){
+				//knapsackHeuristic();
+				//knapsackProblemBruteForce(st);
+				knapsackDynamic(st);
+				//fptasKnapsack("./data/knap_10.inst.dat",0.01);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<String> fill_files(){
+		List<String> files = new ArrayList<String>();
+		files.add("./data/knap_4.inst.dat");
+		files.add("./data/knap_10.inst.dat");
+		files.add("./data/knap_15.inst.dat");
+		files.add("./data/knap_20.inst.dat");
+		files.add("./data/knap_22.inst.dat");
+		files.add("./data/knap_25.inst.dat");
+		files.add("./data/knap_27.inst.dat");
+		files.add("./data/knap_30.inst.dat");
+		files.add("./data/knap_32.inst.dat");
+		files.add("./data/knap_35.inst.dat");
+		files.add("./data/knap_37.inst.dat");
+		files.add("./data/knap_40.inst.dat");
+		
+		return files;
 	}
 
 	public static void knapsackHeuristic() throws IOException {
@@ -41,7 +63,7 @@ public class knapsackProblem {
 				estimatedTime += System.currentTimeMillis() - startTime;
 			}
 			estimatedTime /=100000;
-			System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
+			//System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
 			totalTime += estimatedTime;
 			estimatedTime = 0;
 			knapsack.clear();
@@ -50,9 +72,9 @@ public class knapsackProblem {
 		br.close();
 	}
 
-	public static void knapsackProblemBruteForce() throws IOException {
+	public static void knapsackProblemBruteForce(String file) throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_10.inst.dat");
+		InputStream fis = new FileInputStream(file);
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
@@ -63,18 +85,18 @@ public class knapsackProblem {
 		while ((line = br.readLine()) != null) {
 			knapsack.fillKnapsack(line.split(" "));
 			for (int i = 0; i <5; i++) {
-				startTime = System.currentTimeMillis();
+				startTime = System.nanoTime();
 				knapsackProblemBruteForceRec(knapsack, 0, solution, knapsack.getTotalItemsCost());
-				estimatedTime += System.currentTimeMillis() - startTime;
+				estimatedTime += System.nanoTime() - startTime;
 			}
 			estimatedTime /=5;
-			System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
+			//System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
 			totalTime += estimatedTime;
 			estimatedTime = 0;
 			knapsack.clear();
 			solution.clear();
 		}
-		System.out.println("Total avarage time is " + (totalTime/50));
+		System.out.println(file + " " + (totalTime/50));
 		br.close();
 	}
 
@@ -104,14 +126,21 @@ public class knapsackProblem {
 		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
-		
-		while ((line = br.readLine()) != null) {
+		long startTime, estimatedTime = 0, totalTime = 0;
+				
+		while ((line = br.readLine()) != null) {			
 			knapsack.fillKnapsack(line.split(" "));
-			dynamicProgramming(knapsack);
-			System.out.println(knapsack.getSolutionCost());
+			for (int i = 0; i <500; i++) {
+				startTime = System.nanoTime();
+				dynamicProgramming(knapsack);
+				estimatedTime += System.nanoTime() - startTime;
+			}
+			estimatedTime /=500;
+			totalTime += estimatedTime;
 			knapsack.clear();
 		}
 		
+		System.out.println(inputFile + " " + ((totalTime/50)));
 		br.close();
 	}
 	
