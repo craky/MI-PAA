@@ -14,12 +14,13 @@ public class knapsackProblem {
 	private static List<String> files = fill_files();
 	public static void main(String[] args) {
 		try {
-			for(String st : files){
+			knapsackDynamic("./data/knap_500.dat");
+			/*for(String st : files){
 				//knapsackHeuristic();
 				//knapsackProblemBruteForce(st);
-				knapsackDynamic(st);
-				//fptasKnapsack("./data/knap_10.inst.dat",0.01);
-			}
+				//knapsackDynamic(st);
+				fptasKnapsack(st,0.001);
+			}*/
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -41,7 +42,12 @@ public class knapsackProblem {
 		files.add("./data/knap_35.inst.dat");
 		files.add("./data/knap_37.inst.dat");
 		files.add("./data/knap_40.inst.dat");
-		
+		files.add("./data/knap_50.dat");
+		files.add("./data/knap_75.dat");
+		files.add("./data/knap_100.dat");
+		files.add("./data/knap_150.dat");
+		files.add("./data/knap_200.dat");
+		files.add("./data/knap_500.dat");
 		return files;
 	}
 
@@ -120,27 +126,25 @@ public class knapsackProblem {
 			knapsackProblemBruteForceRec(knapsack, item + 1, solution, remainingCost - knapsack.getItemCost(item));
 	}
 	
-	public static void knapsackDynamic(String inputFile) throws IOException{
+	public static void knapsackDynamic(String inputFile) throws Exception{
 		String line;
 		InputStream fis = new FileInputStream(inputFile);
 		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
-		long startTime, estimatedTime = 0, totalTime = 0;
+		long startTime, totalTime = 0, lines = 0;
 				
-		while ((line = br.readLine()) != null) {			
+		while ((line = br.readLine()) != null) {
+			lines++;
 			knapsack.fillKnapsack(line.split(" "));
-			for (int i = 0; i <500; i++) {
-				startTime = System.nanoTime();
-				dynamicProgramming(knapsack);
-				estimatedTime += System.nanoTime() - startTime;
-			}
-			estimatedTime /=500;
-			totalTime += estimatedTime;
+			startTime = System.currentTimeMillis();
+			//dynamicProgramming(knapsack);
+			Dynamic_2(knapsack);
+			totalTime += System.currentTimeMillis() - startTime;
 			knapsack.clear();
 		}
 		
-		System.out.println(inputFile + " " + ((totalTime/50)));
+		System.out.println(inputFile + " " + ((totalTime/lines)));
 		br.close();
 	}
 	
@@ -181,30 +185,72 @@ public class knapsackProblem {
 		knapsack.setSolutionCost(results[knapsack.getSize()][knapsack.getCapacity()]);		
 	}
 	
+	
+	public static void Dynamic_2(Knapsack knapsack) throws Exception{
+		//int[][] results = filledArr(knapsack.getSize()+1, Knapsack.MAX_COST);
+		int[][] results = new int[knapsack.getSize()+1][knapsack.getTotalItemsCost()+1];
+		int total_cost = knapsack.getTotalItemsCost();
+		
+		if(total_cost >= Knapsack.MAX_COST)
+			throw new Exception("Array is going to be out of bound: " + total_cost + " vs " + Knapsack.MAX_COST);
+		
+		for(int i = 1; i < results[0].length; i++)
+			results[0][i] = Integer.MAX_VALUE/2;
+		
+		for(int i = 1; i <= knapsack.getSize(); i++){
+			for(int j = 0; j <= total_cost; j++){
+				if(knapsack.getItemCost(i-1) <= j){
+					results[i][j] = Math.min(knapsack.getItemWeight(i-1)+results[i-1][j-knapsack.getItemCost(i-1)], results[i-1][j]);
+				} else {
+					results[i][j] = results[i-1][j];
+				}
+			}
+		}
+		
+		for(int i = total_cost; i > 0; i-- ){
+			if(results[knapsack.getSize()][i] <= knapsack.getCapacity()){
+				knapsack.setSolutionCost(i);
+				break;
+			}
+		}
+	}
+	
+	
 	public static void fptasKnapsack(String inputFile, double eps) throws Exception{
 		String line;
 		InputStream fis = new FileInputStream(inputFile);
 		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
+		long startTime, totalTime = 0, lines = 0, elapsedTime = 0;
 		
 		while ((line = br.readLine()) != null) {
+			lines++;
 			knapsack.fillKnapsack(line.split(" "));
-			fptasDynamic(knapsack,eps);
-			System.out.println(knapsack.getSolutionCost());
+			for(int i = 0; i < 10; i++){
+				startTime = System.currentTimeMillis();
+				fptasDynamic(knapsack,eps);
+				elapsedTime += System.currentTimeMillis() - startTime;
+			}
+			elapsedTime /= 10;
+			totalTime += elapsedTime;
+			elapsedTime = 0;
 			knapsack.clear();
 		}
-		
+		System.out.println(inputFile + " " + ((totalTime/lines)));
 		br.close();
 	}
 	
 	public static void fptasDynamic(Knapsack knapsack, double eps) throws Exception{
-		int[][] results = filledArr(knapsack.getSize()+1, Knapsack.MAX_COST);
+		//int[][] results = filledArr(knapsack.getSize()+1, Knapsack.MAX_COST);
+		int[][] results = new int[knapsack.getSize()+1][knapsack.getTotalItemsCost()+1];
 		int total_cost = knapsack.getTotalItemsCost();
-		int b = knapsack.getShift(eps);
+		//int b = knapsack.getShift(eps);
+		int b = 1;
+		knapsack.shiftItemsCost(b);
 		
 		if(total_cost >= Knapsack.MAX_COST)
-			throw new Exception("Array is going to be out of bound.");
+			throw new Exception("Array is going to be out of bound: " + total_cost + " vs " + Knapsack.MAX_COST);
 		
 		for(int i = 1; i < results[0].length; i++)
 			results[0][i] = Integer.MAX_VALUE/2;

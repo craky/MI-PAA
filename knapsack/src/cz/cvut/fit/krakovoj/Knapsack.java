@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Knapsack {
-	public static int MAX_COST = 10000;
+	public static int MAX_COST = 200000;
 	private int id;
 	private int size;
 	private int capacity;
