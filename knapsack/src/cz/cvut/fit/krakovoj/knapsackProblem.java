@@ -14,7 +14,7 @@ public class knapsackProblem {
 	private static List<String> files = fill_files();
 	public static void main(String[] args) {
 		try {
-			knapsackDynamic("./data/knap_500.dat");
+			fptasKnapsack("./data/knap_10.inst.dat",0.7);
 			/*for(String st : files){
 				//knapsackHeuristic();
 				//knapsackProblemBruteForce(st);
@@ -49,6 +49,21 @@ public class knapsackProblem {
 		files.add("./data/knap_200.dat");
 		files.add("./data/knap_500.dat");
 		return files;
+	}
+	
+	public static List<Integer> optimal_sol(String inputFile) throws IOException{
+		List<Integer> opt = new ArrayList<Integer>();
+		String line;
+		InputStream fis = new FileInputStream(inputFile);
+		InputStreamReader isr = new InputStreamReader(fis,
+				Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
+		
+		while ((line = br.readLine()) != null) {
+			opt.add(Integer.parseInt(line.split(" ")[2]));
+		}
+		br.close();
+		return opt;
 	}
 
 	public static void knapsackHeuristic() throws IOException {
@@ -222,17 +237,28 @@ public class knapsackProblem {
 		InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
-		long startTime, totalTime = 0, lines = 0, elapsedTime = 0;
+		long startTime, totalTime = 0, elapsedTime = 0;
+		int lines = 0;
+		double max = 0.0, sol = 0.0;
+		List<Integer> opt = optimal_sol("/home/craa/Stažené/knap_10.sol.dat");
 		
 		while ((line = br.readLine()) != null) {
 			lines++;
 			knapsack.fillKnapsack(line.split(" "));
-			for(int i = 0; i < 10; i++){
+			for(int i = 0; i < 1; i++){
 				startTime = System.currentTimeMillis();
 				fptasDynamic(knapsack,eps);
 				elapsedTime += System.currentTimeMillis() - startTime;
+				System.out.println("*****");
+				System.out.println("opt: " + opt.get(lines-1));
+				sol = (double)(opt.get(lines-1) - knapsack.getSolutionCost())/opt.get(lines-1);
+				System.out.println("sol: " + knapsack.getSolutionCost());
+				System.out.println(sol);
+				if(0 > Double.compare(max, sol))
+					max = sol;
 			}
-			elapsedTime /= 10;
+			System.out.println(max + " !!!!!!");
+			elapsedTime /= 1;
 			totalTime += elapsedTime;
 			elapsedTime = 0;
 			knapsack.clear();
@@ -245,8 +271,9 @@ public class knapsackProblem {
 		//int[][] results = filledArr(knapsack.getSize()+1, Knapsack.MAX_COST);
 		int[][] results = new int[knapsack.getSize()+1][knapsack.getTotalItemsCost()+1];
 		int total_cost = knapsack.getTotalItemsCost();
-		//int b = knapsack.getShift(eps);
-		int b = 1;
+		int b = knapsack.getShift(eps);
+		//int b = 1;
+		System.out.println("bits shift: " + b);
 		knapsack.shiftItemsCost(b);
 		
 		if(total_cost >= Knapsack.MAX_COST)
