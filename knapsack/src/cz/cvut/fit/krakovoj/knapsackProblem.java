@@ -2,7 +2,6 @@ package cz.cvut.fit.krakovoj;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,9 +11,17 @@ import java.util.List;
 
 public class knapsackProblem {
 	private static List<String> files = fill_files();
+	private static List<Integer> optimal = new ArrayList<Integer>();
+	/**
+	 * Number of visited states. It is used for measuring. Only B&B
+	 * and Dynamic programming
+	 */
+	private static int states = 0;
+	
 	public static void main(String[] args) {
 		try {
-			fptasKnapsack("./data/knap_10.inst.dat",0.7);
+			knapsackDynamic("./data/k+/gen_k+d_2_0.dat");
+			//knapsackHeuristic("./data/k+/gen_k+d_2_0.dat");
 			/*for(String st : files){
 				//knapsackHeuristic();
 				//knapsackProblemBruteForce(st);
@@ -27,6 +34,7 @@ public class knapsackProblem {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public static List<String> fill_files(){
 		List<String> files = new ArrayList<String>();
@@ -66,30 +74,35 @@ public class knapsackProblem {
 		return opt;
 	}
 
-	public static void knapsackHeuristic() throws IOException {
+	public static void knapsackHeuristic(String inputFile) throws IOException {
 		String line;
-		InputStream fis = new FileInputStream("./data/knap_10.inst.dat");
+		InputStream fis = new FileInputStream(inputFile);
 		InputStreamReader isr = new InputStreamReader(fis,
 				Charset.forName("UTF-8"));
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
 		long startTime, estimatedTime = 0, totalTime = 0;
+		int numOfLines = 0;
+		double err = 0.0;
 		
 		while ((line = br.readLine()) != null) {
+			numOfLines++;
 			knapsack.fillKnapsack(line.split(" "));
-			for (int i = 0; i < 100000; i++) {
+			for (int i = 0; i < 1; i++) {
 				startTime = System.currentTimeMillis();
 				knapsack.bubbleSort();
 				knapsack.fillCapacity();
 				estimatedTime += System.currentTimeMillis() - startTime;
 			}
-			estimatedTime /=100000;
-			//System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
-			totalTime += estimatedTime;
+			estimatedTime /=1;
+			err += (double) (optimal.get(numOfLines-1)- knapsack.getSolutionCost())/optimal.get(numOfLines-1);
+			System.out.println(err);
+			totalTime += estimatedTime; 
 			estimatedTime = 0;
 			knapsack.clear();
 		}
-		System.out.println("Total avarage time is " + (totalTime/50));
+		System.out.println("nl is " + (numOfLines));
+		System.out.println("Total avarage is " + (err/(numOfLines)) * 100 + "%");
 		br.close();
 	}
 
@@ -101,9 +114,11 @@ public class knapsackProblem {
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
 		KnapsackItem solution = new KnapsackItem();
-		long startTime, estimatedTime = 0, totalTime = 0;
+		long startTime, estimatedTime = 0, totalTime = 0, totalStates = 0;
+		
 
 		while ((line = br.readLine()) != null) {
+			states = 0;
 			knapsack.fillKnapsack(line.split(" "));
 			for (int i = 0; i <5; i++) {
 				startTime = System.nanoTime();
@@ -111,12 +126,17 @@ public class knapsackProblem {
 				estimatedTime += System.nanoTime() - startTime;
 			}
 			estimatedTime /=5;
-			//System.out.println(knapsack.getId() +"," + estimatedTime +"," + knapsack.getSolutionCost());
+			states /= 5;
+			//System.out.println("Sum of visited states is " + states);
+			//System.out.println(knapsack.getSolutionCost());
+			optimal.add(knapsack.getSolutionCost());
 			totalTime += estimatedTime;
+			totalStates += states;
 			estimatedTime = 0;
 			knapsack.clear();
 			solution.clear();
 		}
+		System.out.println("AVG states: " + (totalStates/20));
 		System.out.println(file + " " + (totalTime/50));
 		br.close();
 	}
@@ -126,6 +146,7 @@ public class knapsackProblem {
 		KnapsackItem tempSolution = new KnapsackItem(solution.getCost(),
 				solution.getWeight());
 		if (item >= knapsack.getSize()) {
+			states++;
 			if (solution.getCost() > knapsack.getSolutionCost()
 					&& solution.getWeight() <= knapsack.getCapacity()) {
 				knapsack.setSolutionCost(solution.getCost());
@@ -148,7 +169,8 @@ public class knapsackProblem {
 		BufferedReader br = new BufferedReader(isr);
 		Knapsack knapsack = new Knapsack();
 		long startTime, totalTime = 0, lines = 0;
-				
+		
+		states = 0;
 		while ((line = br.readLine()) != null) {
 			lines++;
 			knapsack.fillKnapsack(line.split(" "));
@@ -158,7 +180,7 @@ public class knapsackProblem {
 			totalTime += System.currentTimeMillis() - startTime;
 			knapsack.clear();
 		}
-		
+		System.out.println("States " + ((states/lines)));
 		System.out.println(inputFile + " " + ((totalTime/lines)));
 		br.close();
 	}
@@ -187,9 +209,10 @@ public class knapsackProblem {
 	 */
 	public static void dynamicProgramming(Knapsack knapsack){
 		int[][] results = filledArr(knapsack.getSize()+1, knapsack.getCapacity()+1);
-		
+		states = 0;
 		for(int i = 1; i < knapsack.getSize()+1; i++){
 			for(int j = 0; j < knapsack.getCapacity()+1; j++){
+				states++;
 				if(knapsack.getItemWeight(i-1) <= j)
 					results[i][j] = Math.max(results[i-1][j], results[i-1][j-knapsack.getItemWeight(i-1)] + knapsack.getItemCost(i-1));
 				else
@@ -211,9 +234,10 @@ public class knapsackProblem {
 		
 		for(int i = 1; i < results[0].length; i++)
 			results[0][i] = Integer.MAX_VALUE/2;
-		
+		states = 0;
 		for(int i = 1; i <= knapsack.getSize(); i++){
 			for(int j = 0; j <= total_cost; j++){
+				states++;
 				if(knapsack.getItemCost(i-1) <= j){
 					results[i][j] = Math.min(knapsack.getItemWeight(i-1)+results[i-1][j-knapsack.getItemCost(i-1)], results[i-1][j]);
 				} else {
