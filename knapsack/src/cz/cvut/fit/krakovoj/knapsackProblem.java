@@ -20,7 +20,9 @@ public class knapsackProblem {
 	
 	public static void main(String[] args) {
 		try {
-			knapsackDynamic("./data/k+/gen_k+d_2_0.dat");
+			KnapsackGA solution = new KnapsackGA();
+			solution.solve("./data/knap_15.inst.dat");
+			//knapsackDynamic("./data/k+/gen_k+d_2_0.dat");
 			//knapsackHeuristic("./data/k+/gen_k+d_2_0.dat");
 			/*for(String st : files){
 				//knapsackHeuristic();
