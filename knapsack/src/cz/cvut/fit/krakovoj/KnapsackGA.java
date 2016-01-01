@@ -21,13 +21,14 @@ import java.util.Random;
  *
  */
 public class KnapsackGA {
-	public static final int POPULATION_SIZE = 500;
-	public static final double CROSSOVER_PROBABILITY = 0.7;
-	public static final double MUTATION_PROBABILITY = 0.1;
-	public static final int MAX_GENERATION = 300;
-	public static final int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 250;
+	public static final int POPULATION_SIZE = 100;
+	public static final double CROSSOVER_PROBABILITY = 0.6;
+	public static final double MUTATION_PROBABILITY = 0.6;
+	public static final int MAX_GENERATION = 5000;
+	public static final int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 10000;
 	
 	private List<MemberGA> population = new ArrayList<MemberGA>();
+	private List<MemberGA> newPopulation = new ArrayList<MemberGA>();
 	private Knapsack knapsack = new Knapsack();
 	private int generationCount = 0;
 	private int withoutChange = 0;
@@ -56,6 +57,19 @@ public class KnapsackGA {
 		
 		br.close();
 	}
+	
+	public void solveOneLine(String inputFile) throws IOException{
+		InputStream fis = new FileInputStream(inputFile);
+		InputStreamReader isr = new InputStreamReader(fis,
+				Charset.forName("UTF-8"));
+		BufferedReader br = new BufferedReader(isr);
+		
+		knapsack.fillKnapsack(br.readLine().split(" "));			
+		initialization();
+		run();
+		knapsack.clear();		
+		br.close();
+	}
 		
 	/**
 	 * Will make a population of individuals.
@@ -63,8 +77,14 @@ public class KnapsackGA {
 	 * chromosome.
 	 */
 	public void initialization(){
+		population.clear();
 		for(int i = 0; i < POPULATION_SIZE; i++){
 			population.add(new MemberGA(knapsack.getSize()));
+		}
+		
+		if(population.size() != POPULATION_SIZE){
+			System.err.println("Error Population size shoud be" +
+					POPULATION_SIZE + " but is " + population.size() );
 		}
 		
 		for(MemberGA individual : population){
@@ -75,22 +95,32 @@ public class KnapsackGA {
 	public void run(){
 		generationCount = 0;
 		int bestFitness = population.get(0).fitness(knapsack), tmpBestFit = population.get(0).fitness(knapsack);
-		
-		while (withoutChange < MAX_GENERATIONS_WITHOUT_IMPROVEMENT && generationCount < MAX_GENERATION){
-			
-			for(int i = 0; i < population.size(); i+=2){
+		//System.out.println("\"P(Krizeni) = " + CROSSOVER_PROBABILITY + "\"");
+		while (withoutChange < MAX_GENERATIONS_WITHOUT_IMPROVEMENT && generationCount < MAX_GENERATION){		
+			for(int i = 0; i < POPULATION_SIZE; i+=2){
 				crossoverAndMutate();
 			}
-			bestFitness = getBestFitness();
+			setPopulationBack();
+			
+			if(!newPopulation.isEmpty()){
+				System.err.println("Warning: Set Population back not works. NewPop is " + newPopulation.size()
+						+ " and should be 0");
+			}
+			if (bestFitness < getBestFitness()){
+				bestFitness = getBestFitness();
+			}
 			if(bestFitness == tmpBestFit){
 				withoutChange++;
 			}else{
 				withoutChange = 0;
 			}
 			tmpBestFit = bestFitness;
+			//if(generationCount % 10 == 0 ){
+				//System.out.println(generationCount + " " + bestFitness);
+			//}
 			generationCount++;
 		}
-		System.out.println("Starting Line no. " + knapsack.getId() + ". Best Fitness is " + bestFitness);
+		System.out.println( knapsack.getId() + " " + bestFitness);
 		withoutChange = 0;
 	}
 	
@@ -99,10 +129,48 @@ public class KnapsackGA {
 	 * @return individual with better fitness
 	 */
 	public MemberGA tournamentSelection(){
-		MemberGA parent_1 = population.get(rand.nextInt(population.size()));
-		MemberGA parent_2 = population.get(rand.nextInt(population.size()));
+		int index_1 = rand.nextInt(population.size());
+		/* Only one individual left in original population*/
+		if(population.size() == 1){
+			MemberGA onlyIndividual = population.remove(index_1); 
+			newPopulation.add(onlyIndividual);
+			return onlyIndividual;
+		}
+		int index_2 = rand.nextInt(population.size()-1);
+				
+		MemberGA parent_1 = population.remove(index_1);
+		MemberGA parent_2 = population.remove(index_2);
 		
-		return parent_1.fitness(knapsack) >= parent_2.fitness(knapsack) ? parent_1:parent_2;
+		if(parent_1.fitness(knapsack) >= parent_2.fitness(knapsack)){			
+			population.add(parent_2);					
+			newPopulation.add(parent_1);
+			return parent_1;
+		} else {			
+			population.add(parent_1);
+			newPopulation.add(parent_2);
+			return parent_2;
+		}
+	}
+	
+	/**
+	 * After tournament is important to set up population
+	 * */
+	public void setPopulationBack(){
+		if(population.size() != 0){
+			System.err.println("Warning population.size in setPopulationBack" +
+					"is not 0. It is " + population.size());
+		}
+		for(int i = 0; i < POPULATION_SIZE; i ++){
+			// Removing always the first element of the list
+			population.add(newPopulation.remove(0));
+		}
+		
+		newPopulation.clear();
+		
+		if(population.size() != POPULATION_SIZE){
+			System.err.println("Warning population.size in setPopulationBack should be " + POPULATION_SIZE 
+					+ " but is " + population.size());
+		}
 	}
 	
 	/**
