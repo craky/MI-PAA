@@ -21,11 +21,12 @@ import java.util.Random;
  *
  */
 public class KnapsackGA {
-	public static final int POPULATION_SIZE = 100;
-	public static final double CROSSOVER_PROBABILITY = 0.6;
-	public static final double MUTATION_PROBABILITY = 0.6;
+	public static final int POPULATION_SIZE = 350;
+	public static final double CROSSOVER_PROBABILITY = 0.7;
+	public static final double MUTATION_PROBABILITY = 1.0;
 	public static final int MAX_GENERATION = 5000;
-	public static final int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 10000;
+	public static final int MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 5000;
+	public static final int TOURNAMENT_CAPACITY = 70;
 	
 	private List<MemberGA> population = new ArrayList<MemberGA>();
 	private List<MemberGA> newPopulation = new ArrayList<MemberGA>();
@@ -47,11 +48,9 @@ public class KnapsackGA {
 		
 		while ((line = br.readLine()) != null) {
 			knapsack.fillKnapsack(line.split(" "));
-			for (int i = 0; i < 1; i++) {
-				//For each line do
-				initialization();
-				run();
-			}
+			//For each line do
+			initialization();
+			run();
 			knapsack.clear();
 		}
 		
@@ -95,12 +94,14 @@ public class KnapsackGA {
 	public void run(){
 		generationCount = 0;
 		int bestFitness = population.get(0).fitness(knapsack), tmpBestFit = population.get(0).fitness(knapsack);
-		//System.out.println("\"P(Krizeni) = " + CROSSOVER_PROBABILITY + "\"");
+		System.out.println("\"Generace\"  \"P(Mutace) " + MUTATION_PROBABILITY + "\"");
 		while (withoutChange < MAX_GENERATIONS_WITHOUT_IMPROVEMENT && generationCount < MAX_GENERATION){		
 			for(int i = 0; i < POPULATION_SIZE; i+=2){
 				crossoverAndMutate();
 			}
-			setPopulationBack();
+			population.clear();
+			moveList(newPopulation,population);
+			
 			
 			if(!newPopulation.isEmpty()){
 				System.err.println("Warning: Set Population back not works. NewPop is " + newPopulation.size()
@@ -115,62 +116,55 @@ public class KnapsackGA {
 				withoutChange = 0;
 			}
 			tmpBestFit = bestFitness;
-			//if(generationCount % 10 == 0 ){
-				//System.out.println(generationCount + " " + bestFitness);
-			//}
+			if(generationCount % 10 == 0 ){
+				System.out.println(generationCount + " " + bestFitness);
+			}
 			generationCount++;
 		}
-		System.out.println( knapsack.getId() + " " + bestFitness);
+		//System.out.println( knapsack.getId() + " " + bestFitness);
 		withoutChange = 0;
 	}
 	
 	/**
-	 * Randomly choose two individuals a select the one with better fitness.
-	 * @return individual with better fitness
+	 * Randomly choose 'selectCapacity' individuals and select the one with better fitness.
+	 * @param selectCapacity
+	 * @return individual from chosen list with best fitness
 	 */
-	public MemberGA tournamentSelection(){
-		int index_1 = rand.nextInt(population.size());
-		/* Only one individual left in original population*/
-		if(population.size() == 1){
-			MemberGA onlyIndividual = population.remove(index_1); 
-			newPopulation.add(onlyIndividual);
-			return onlyIndividual;
-		}
-		int index_2 = rand.nextInt(population.size()-1);
-				
-		MemberGA parent_1 = population.remove(index_1);
-		MemberGA parent_2 = population.remove(index_2);
+	public MemberGA tournamentSelection(int selectCapacity){
+		MemberGA individual;
+		List<MemberGA> tournament = new ArrayList<MemberGA>();
+		List<MemberGA> copyOfPopul = new ArrayList<MemberGA>();
 		
-		if(parent_1.fitness(knapsack) >= parent_2.fitness(knapsack)){			
-			population.add(parent_2);					
-			newPopulation.add(parent_1);
-			return parent_1;
-		} else {			
-			population.add(parent_1);
-			newPopulation.add(parent_2);
-			return parent_2;
+		for(int i = 0; i < population.size();i++){
+			copyOfPopul.add(population.get(i).clone());
 		}
+		
+		if(selectCapacity > population.size()){
+			System.err.println("TournamentSelection capacity size problem detected.");
+		} else {
+			for(int i = 0; i < selectCapacity; i ++){
+				//tournament.add(population.remove(rand.nextInt(population.size())));
+				tournament.add(copyOfPopul.remove(rand.nextInt(copyOfPopul.size())));
+			}
+		}
+		
+		individual = removeBestOne(tournament);
+		//newPopulation.add(individual);
+		//moveList(tournament,population);
+		//tournament.clear();
+		
+		return individual;
 	}
 	
-	/**
-	 * After tournament is important to set up population
-	 * */
-	public void setPopulationBack(){
-		if(population.size() != 0){
-			System.err.println("Warning population.size in setPopulationBack" +
-					"is not 0. It is " + population.size());
-		}
-		for(int i = 0; i < POPULATION_SIZE; i ++){
-			// Removing always the first element of the list
-			population.add(newPopulation.remove(0));
-		}
+	public MemberGA removeBestOne(List<MemberGA> list){
+		MemberGA best = list.get(0);
 		
-		newPopulation.clear();
-		
-		if(population.size() != POPULATION_SIZE){
-			System.err.println("Warning population.size in setPopulationBack should be " + POPULATION_SIZE 
-					+ " but is " + population.size());
+		for(MemberGA individual: list){
+			best = best.fitness(knapsack) > individual.fitness(knapsack) ? best : individual;
 		}
+		//list.remove(best);
+		
+		return best.clone(); 
 	}
 	
 	/**
@@ -178,8 +172,8 @@ public class KnapsackGA {
 	 * After that mutate.
 	 */
 	public void crossoverAndMutate(){
-		MemberGA parent_1 = tournamentSelection();
-		MemberGA parent_2 = tournamentSelection();
+		MemberGA parent_1 = tournamentSelection(TOURNAMENT_CAPACITY);
+		MemberGA parent_2 = tournamentSelection(TOURNAMENT_CAPACITY);		
 		
 		if(java.lang.Double.compare(rand.nextDouble(),CROSSOVER_PROBABILITY) <= 0){
 			parent_1.doCrossover(0,knapsack.getSize() / 2,parent_2);
@@ -188,6 +182,8 @@ public class KnapsackGA {
 		
 		parent_1.mutate(MUTATION_PROBABILITY);
 		parent_2.mutate(MUTATION_PROBABILITY);
+		newPopulation.add(parent_1.clone());
+		newPopulation.add(parent_2.clone());
 	}
 	
 	/**
@@ -201,5 +197,19 @@ public class KnapsackGA {
 		}
 		
 		return result;
-	}		
+	}
+	
+	/**
+	 * Takes all elements from source to target
+	 * @param source list of individuals
+	 * @param target list of individuals
+	 */
+	public void moveList(List<MemberGA> source,List<MemberGA> target){
+		int original_source_size = source.size();
+		for(int i = 0; i < original_source_size;i++){
+			target.add(source.remove(0));
+		}
+		
+		source.clear();
+	}
 }

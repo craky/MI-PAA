@@ -16,6 +16,13 @@ public class MemberGA {
 		chromosome = new Integer[chrom_size];
 	}
 	
+	public MemberGA(MemberGA parent){
+		chromosome = new Integer[parent.getChromosomeSize()];
+		for(int i = 0; i < parent.getChromosomeSize();i++){
+			chromosome[i] = parent.getChromoElem(i);
+		}
+	}
+	
 	/**
 	 * This method is only for tests.
 	 * @return length of chromosome
@@ -56,7 +63,7 @@ public class MemberGA {
 		}
 		
 		//System.out.println("    --fitness = " + total_cost + " is it true? = " + (total_weight < knapsack.getCapacity()));
-		if(total_weight < knapsack.getCapacity()){
+		if(total_weight <= knapsack.getCapacity()){
 			return total_cost;
 		}
 		
@@ -82,6 +89,10 @@ public class MemberGA {
 				}
 			}
 		}
+	}
+	
+	public MemberGA clone(){
+		return new MemberGA(this);
 	}
 
 }

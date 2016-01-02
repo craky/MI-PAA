@@ -21,8 +21,8 @@ public class knapsackProblem {
 	public static void main(String[] args) {
 		try {
 			KnapsackGA solution = new KnapsackGA();
-			solution.solve("./data/knap_40.inst.dat");
-			//solution.solveOneLine("./data/knap_40.inst.dat");
+			//solution.solve("./data/knap_40.inst.dat");
+			solution.solveOneLine("./data/knap_40.inst.dat");
 			//knapsackDynamic("./data/k+/gen_k+d_2_0.dat");
 			//knapsackHeuristic("./data/k+/gen_k+d_2_0.dat");
 			/*for(String st : files){
