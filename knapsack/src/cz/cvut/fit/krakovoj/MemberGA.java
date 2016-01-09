@@ -38,7 +38,7 @@ public class MemberGA {
 		Random rand = new Random();
 		
 		for(int i = 0; i < chromosome.length;i++){
-			chromosome[i] = rand.nextInt() % 2 ;
+			chromosome[i] = rand.nextInt(Integer.MAX_VALUE) % 2 ;
 		}
 	}
 	
