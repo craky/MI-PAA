@@ -57,6 +57,20 @@ public class Individual {
 		}
 	}
 	
+	public void mutate(double mutationProbability){
+		Random rand = new Random();
+		
+		for(int i = 0; i < chromosome.length;i++){
+			if(java.lang.Double.compare(rand.nextDouble(), mutationProbability) <= 0){
+				if(chromosome[i] == 1){
+					chromosome[i] = 0;
+				} else {
+					chromosome[i] = 1;
+				}
+			}
+		}
+	}
+	
 	public int getChromosomeLength(){
 		return chromosome.length;
 	}
