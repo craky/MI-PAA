@@ -1,5 +1,6 @@
 */bin/
 *~
+*.gz
 bool_form/.classpath
 bool_form/.project
 
