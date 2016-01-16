@@ -1,0 +1,34 @@
+
+CNF Benchmark Suite: ENGINE-UNSAT.1.0
+========================================
+
+Description:    formulas from formal verification of out-of-order processors
+                with register renaming and a reorder buffer
+
+# of instances: 10
+
+Author:         Miroslav N. Velev (mvelev@ece.cmu.edu)
+                http://www.ece.cmu.edu/~mvelev
+
+Date:           August 5, 2003
+
+
+
+CNF Formula              Size [Bytes]    Variables    Clauses    Literals    Avg. Literals/Clause
+----------------------------------------------------------------------------------------------------
+engine_4                      1101656         6944      66654      188252                2.824317
+engine_4_nd                   1119014         7000      67586      190944                2.825200
+engine_5                      3818245        18788     214095      610365                2.850907
+engine_5_case1                3820146        18810     214185      610591                2.850765
+engine_5_nd                   3858344        18878     216156      616378                2.851542
+engine_5_nd_case1             3862397        18900     216246      616604                2.851401
+engine_6                     11332474        45276     605958     1740542                2.872381
+engine_6_case1               11334786        45303     606068     1740818                2.872315
+engine_6_nd                  11415783        45408     610010     1752446                2.872815
+engine_6_nd_case1            11417558        45435     610120     1752722                2.872750
+
+
+
+
+
+
