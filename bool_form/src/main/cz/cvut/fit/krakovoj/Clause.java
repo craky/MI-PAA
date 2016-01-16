@@ -16,7 +16,7 @@ public class Clause {
 	public void addLiteral(int literal){
 		//literal can not be a zero
 		if(literal == 0){
-			System.err.println("Warning: Literal can not be 0 and is '" + literal + ". Literal" +
+			System.err.println("Warning: Literal can not be 0 and is '" + literal + "'. Literal" +
 					" not added.");
 			return;
 		}
@@ -44,5 +44,14 @@ public class Clause {
 				
 		}
 		return false;
+	}
+	
+	public Clause clone(){
+		Clause c = new Clause();
+		for(Integer l: literals){
+			c.addLiteral(l);
+		}
+		
+		return c;
 	}
 }

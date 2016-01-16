@@ -47,6 +47,15 @@ public class ClauseTest {
 		evaulation.set(2, 1);
 		// 0 + 1 + 1 + 1 + 0
 		assertFalse(c.eval(evaulation));
+		
+		//Test clone
+		Clause d = c.clone();
+		assertEquals(c.getSize(),4);
+		assertEquals(d.getSize(),4);
+		d.addLiteral(-4);
+		assertEquals(c.getSize(),4);
+		assertEquals(d.getSize(),5);
+		
 	}
 
 }
