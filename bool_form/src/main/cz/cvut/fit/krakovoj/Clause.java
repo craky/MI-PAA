@@ -62,4 +62,12 @@ public class Clause {
 		
 		return c;
 	}
+	
+	public void print(){
+		System.out.print("Clause is {");
+		for(Integer l: literals){
+			System.out.print(l+", ");
+		}
+		System.out.print("}");
+	}
 }
