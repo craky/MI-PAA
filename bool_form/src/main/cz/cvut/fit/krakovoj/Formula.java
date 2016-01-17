@@ -5,7 +5,6 @@ package cz.cvut.fit.krakovoj;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,5 +85,37 @@ public class Formula {
 		}
 		
 		clauses.add(c.clone());
+	}
+	
+	public boolean eval(List<Integer> evaulation){
+		for(Clause c: clauses){
+			if(!c.eval(evaulation)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public int trueClauses(List<Integer> evaulation){
+		int clausesResult = 0;
+		for(Clause c: clauses){
+			if(c.eval(evaulation)){
+				clausesResult++;
+			}
+		}
+		
+		return clausesResult;
+	}
+	
+	public int weightedSum(List<Integer> evaulation){
+		int result = 0;
+		for(int i = 0; i < evaulation.size();i++){
+			if(evaulation.get(i) == 1){
+				result += weights.get(i);
+			}
+		}
+		
+		return result;
 	}
 }

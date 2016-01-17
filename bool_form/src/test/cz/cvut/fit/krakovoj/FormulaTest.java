@@ -82,5 +82,44 @@ public class FormulaTest {
 		assertEquals(f.getWeight(2),1);
 		assertEquals(f.getWeight(3),6);
 	}
+	
+	@Test
+	public void testFormulaEvaulation() throws IOException{
+		Formula f = new Formula();
+		List<Integer> evaulation = new ArrayList<Integer>();
+		f.readFromFile("src/test/cz/cvut/fit/krakovoj/testData/example.dat");
+		evaulation.add(0);
+		evaulation.add(0);
+		evaulation.add(0);
+		evaulation.add(1);
+		assertEquals(f.weightedSum(evaulation) ,6);
+		assertTrue(f.eval(evaulation));
+		evaulation.clear();
+		evaulation.add(1);
+		evaulation.add(0);
+		evaulation.add(0);
+		evaulation.add(1);
+		assertEquals(f.weightedSum(evaulation) ,8);
+		assertTrue(f.eval(evaulation));
+		evaulation.clear();
+		evaulation.add(1);
+		evaulation.add(1);
+		evaulation.add(1);
+		evaulation.add(0);
+		assertEquals(f.weightedSum(evaulation) ,7);
+		assertTrue(f.eval(evaulation));
+		evaulation.clear();
+		evaulation.clear();
+		evaulation.add(0);
+		evaulation.add(0);
+		evaulation.add(0);
+		evaulation.add(0);
+		assertFalse(f.eval(evaulation));
+		
+		
+		assertEquals(f.trueClauses(evaulation),5);
+		assertEquals(f.weightedSum(evaulation) ,0);
+		evaulation.clear();
+	}
 
 }
