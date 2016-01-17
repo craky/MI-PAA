@@ -2,6 +2,10 @@ package cz.cvut.fit.krakovoj;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -39,6 +43,19 @@ public class IndividualTest {
 		assertEquals(i.getChromosomeElem(2),j.getChromosomeElem(2));
 		assertEquals(i.getChromosomeElem(3),j.getChromosomeElem(3));
 		assertEquals(i.getChromosomeElem(4),j.getChromosomeElem(4));
+	}
+	
+	@Test
+	public void testFitness() throws IOException{
+		Formula f = new Formula();
+		List<Integer> chrom = new ArrayList<Integer>();
+		f.readFromFile("src/test/cz/cvut/fit/krakovoj/testData/example.dat");
+		chrom.add(1);
+		chrom.add(0);
+		chrom.add(0);
+		chrom.add(1);
+		Individual i = new Individual(chrom);
+		assertEquals(i.getFitness(f),14);
 	}
 
 }

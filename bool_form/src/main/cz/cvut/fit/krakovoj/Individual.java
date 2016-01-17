@@ -39,6 +39,10 @@ public class Individual {
 		}
 	}
 	
+	public Individual(List<Integer> chrom){
+		chromosome.addAll(chrom);
+	}
+	
 	public int getChromosomeElem(int position) throws Exception{
 		if(position >= chromosome.size()){
 			throw new IndexOutOfBoundsException("Position is bigger than chromosome length.");
@@ -80,5 +84,24 @@ public class Individual {
 	
 	public Individual clone(){
 		return new Individual(this);
+	}
+	
+	public void randomChromosome(){
+		Random rand = new Random();
+		
+		for(int i = 0; i < chromosome.size();i++){
+			chromosome.set(i,rand.nextInt(Integer.MAX_VALUE) % 2) ;
+		}
+	}
+	
+	public int getFitness(Formula f){
+		if(f.eval(chromosome) == false){
+			return f.trueClauses(chromosome);
+		}
+		return f.trueClauses(chromosome)+f.weightedSum(chromosome);
+	}
+	
+	public int size(){
+		return chromosome.size();
 	}
 }
