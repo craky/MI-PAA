@@ -3,6 +3,8 @@
  */
 package cz.cvut.fit.krakovoj;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -12,7 +14,7 @@ import java.util.Random;
  *
  */
 public class Individual {
-	private Integer[] chromosome;
+	private List<Integer> chromosome = new ArrayList<Integer>();
 	
 	public Individual(int length){
 		if(length < 0){
@@ -20,14 +22,15 @@ public class Individual {
 					"Required lenth '" + length + "' is changed to 0.");
 			length = 0;
 		}
-		chromosome = new Integer[length];
+		for(int i = 0; i < length;i++){
+			chromosome.add(0);
+		}
 	}
 	
 	public Individual(Individual inputIndividual){
-		chromosome = new Integer[inputIndividual.getChromosomeLength()];
-		for(int i = 0; i < chromosome.length; i++){
+		for(int i = 0; i < inputIndividual.size(); i++){
 			try {
-				chromosome[i] = inputIndividual.getChromosomeElem(i);
+				chromosome.add(inputIndividual.getChromosomeElem(i));
 			} catch (Exception e) {
 				System.err.println("Chromosome was fulfilled prematurely:");
 				e.printStackTrace();
@@ -37,42 +40,42 @@ public class Individual {
 	}
 	
 	public int getChromosomeElem(int position) throws Exception{
-		if(position >= chromosome.length){
+		if(position >= chromosome.size()){
 			throw new IndexOutOfBoundsException("Position is bigger than chromosome length.");
 		}
-		return chromosome[position];
+		return chromosome.get(position);
 	}
 	
 	public void setRandomChromosome(){
 		Random rand = new Random();
 		
-		if(chromosome.length < 1){
-			System.err.println("Warning: Chromosome length is " + chromosome.length +" so it" +
+		if(chromosome.size() < 1){
+			System.err.println("Warning: Chromosome length is " + chromosome.size() +" so it" +
 					" can not be randomised.");
 			return;
 		}
 		
-		for(int i = 0; i < chromosome.length; i++){		
-			chromosome[i] = rand.nextInt(Integer.MAX_VALUE) % 2;	
+		for(int i = 0; i < chromosome.size(); i++){		
+			chromosome.set(i,rand.nextInt(Integer.MAX_VALUE) % 2);	
 		}
 	}
 	
 	public void mutate(double mutationProbability){
 		Random rand = new Random();
 		
-		for(int i = 0; i < chromosome.length;i++){
+		for(int i = 0; i < chromosome.size();i++){
 			if(java.lang.Double.compare(rand.nextDouble(), mutationProbability) <= 0){
-				if(chromosome[i] == 1){
-					chromosome[i] = 0;
+				if(chromosome.get(i) == 1){
+					chromosome.set(i,0);
 				} else {
-					chromosome[i] = 1;
+					chromosome.set(i,1);
 				}
 			}
 		}
 	}
 	
 	public int getChromosomeLength(){
-		return chromosome.length;
+		return chromosome.size();
 	}
 	
 	public Individual clone(){
