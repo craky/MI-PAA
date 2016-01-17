@@ -39,7 +39,7 @@ public class ClauseTest {
 		// 0 + 1 + 0 + 0 + 0
 		assertTrue(c.eval(evaulation));
 		evaulation.set(1, 0);
-		evaulation.set(4,1);
+		evaulation.set(3,1);
 		// 0 + 0 + 0 + 1 + 0
 		assertTrue(c.eval(evaulation));
 		evaulation.set(0, 0);
