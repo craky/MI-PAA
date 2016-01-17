@@ -39,7 +39,7 @@ public class Formula {
 	public void addClause(List<Integer> c){
 		Clause cl = new Clause();
 		for(int i = 0; i < c.size();i++){
-			cl.addLiteral(i);
+			cl.addLiteral(c.get(i));
 		}
 		clauses.add(cl.clone());
 	}
