@@ -104,4 +104,10 @@ public class Individual {
 	public int size(){
 		return chromosome.size();
 	}
+	
+	public void doCrossover(int from, int to, Individual source) throws Exception{
+		for(int i = from; i < to; i++){
+			chromosome.set(i,source.getChromosomeElem(i));
+		}
+	}
 }
