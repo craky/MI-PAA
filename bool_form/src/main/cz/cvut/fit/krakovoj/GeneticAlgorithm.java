@@ -154,4 +154,14 @@ public class GeneticAlgorithm {
 		
 		return result;
 	}
+	
+	public Individual getBestIndividual() throws Exception{
+		Individual result = population.get(0);
+		for(Individual individual : population){
+			if (individual.getFitness(formula) > result.getFitness(formula))
+				result = individual;
+		}
+		
+		return result.clone();
+	}
 }
