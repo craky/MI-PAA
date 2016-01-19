@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm {
-	public static int populationSize = 6;
+	public static int populationSize = 70;
 	public static double crossoverProbability = 0.7;
 	public static double mutationProbability = 0.05;
-	public static int maxGeneration = 50;
+	public static int maxGeneration = 1000;
 	public static int maxGenerationWithoutImprovement = maxGeneration / 4;
-	public static int tournamentCapacity = 3;
+	public static int tournamentCapacity = 5;
+	public static int sharedFitnessThreshold = 1;
 	
 	private List<Individual> population = new ArrayList<Individual>();
 	private List<Individual> newPopulation = new ArrayList<Individual>();
@@ -37,13 +38,14 @@ public class GeneticAlgorithm {
 		for(Individual individual : population){
 			individual.randomChromosome();
 		}
+				
 	}
 	
 	public int getPopulationSize(){
 		return population.size();
 	}
 	
-	public Individual tournament(int capacity){
+	public Individual tournament(int capacity) throws Exception{
 		Individual individual;
 		
 		List<Individual> tournament = new ArrayList<Individual>();
@@ -65,7 +67,7 @@ public class GeneticAlgorithm {
 		return individual;
 	}
 	
-	public Individual removeBestOne(List<Individual> list){
+	public Individual removeBestOne(List<Individual> list) throws Exception{
 		Individual best = list.get(0);
 		
 		for(Individual individual: list){
@@ -110,10 +112,10 @@ public class GeneticAlgorithm {
 		newPopulation.add(parent_2.clone());
 	}
 	
-	public void run() throws Exception{
+	public int run(int threshold) throws Exception{
+		sharedFitnessThreshold = threshold;
 		generationCount = 0;
 		int bestFitness = population.get(0).getFitness(formula), tmpBestFit = population.get(0).getFitness(formula);
-		System.out.println("\"Generace\"  \"P(Mutace) " + mutationProbability + "\"");
 		while (withoutChange < maxGenerationWithoutImprovement && generationCount < maxGeneration){		
 			for(int i = 0; i < populationSize; i+=2){
 				crossoverAndMutate();
@@ -136,17 +138,19 @@ public class GeneticAlgorithm {
 			}
 			tmpBestFit = bestFitness;
 			generationCount++;
-			System.out.println("Gen: " + generationCount + " fit: " + bestFitness);
+			//System.out.println("Gen: " + generationCount + " fit: " + bestFitness);
 		}
-		System.out.println("Best fitness " + bestFitness);
+		//System.out.println("Best fitness " + bestFitness + " wSum = " + getBestIndividual().getWeightedSum(formula));
 		withoutChange = 0;
+		return getBestIndividual().getWeightedSum(formula);
 	}
 	
 	/**
 	 * Counts best fitness from all individuals
 	 * @return best fitness
+	 * @throws Exception 
 	 */
-	public int getBestFitness(){
+	public int getBestFitness() throws Exception{
 		int result = population.get(0).getFitness(formula);
 		for(Individual individual : population){
 			result = individual.getFitness(formula) > result ? individual.getFitness(formula) : result;
