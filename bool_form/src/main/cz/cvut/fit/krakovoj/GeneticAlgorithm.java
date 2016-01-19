@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm {
-	public static int populationSize = 70;
-	public static double crossoverProbability = 0.7;
-	public static double mutationProbability = 0.05;
-	public static int maxGeneration = 1000;
-	public static int maxGenerationWithoutImprovement = maxGeneration / 4;
-	public static int tournamentCapacity = 5;
-	public static int sharedFitnessThreshold = 1;
+	public int populationSize = 35;
+	public double crossoverProbability = 0.7;
+	public double mutationProbability = 0.01;
+	public int maxGeneration = 500;
+	public int maxGenerationWithoutImprovement = maxGeneration / 4;
+	public int tournamentCapacity = 5;
+	public int sharedFitnessThreshold = 1;
 	
 	private List<Individual> population = new ArrayList<Individual>();
 	private List<Individual> newPopulation = new ArrayList<Individual>();
@@ -112,8 +112,8 @@ public class GeneticAlgorithm {
 		newPopulation.add(parent_2.clone());
 	}
 	
-	public int run(int threshold) throws Exception{
-		sharedFitnessThreshold = threshold;
+	public int run(double threshold) throws Exception{
+		mutationProbability = threshold;
 		generationCount = 0;
 		int bestFitness = population.get(0).getFitness(formula), tmpBestFit = population.get(0).getFitness(formula);
 		while (withoutChange < maxGenerationWithoutImprovement && generationCount < maxGeneration){		
@@ -162,8 +162,9 @@ public class GeneticAlgorithm {
 	public Individual getBestIndividual() throws Exception{
 		Individual result = population.get(0);
 		for(Individual individual : population){
-			if (individual.getFitness(formula) > result.getFitness(formula))
+			if (individual.getFitness(formula) > result.getFitness(formula)){
 				result = individual;
+			}
 		}
 		
 		return result.clone();

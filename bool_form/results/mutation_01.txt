@@ -1,0 +1,26 @@
+# bool_form/data/unsat_1_/40_125_25.dat
+public static int populationSize = 70;
+	public static double crossoverProbability = 0.7;
+	public static double mutationProbability = 0.05;
+	public static int maxGeneration = 1000;
+	public static int maxGenerationWithoutImprovement = maxGeneration / 4;
+	public static int tournamentCapacity = 5;
+	public static int sharedFitnessThreshold = 1;
+	
+0.001 316
+0.004 316
+0.007 316
+0.01 316
+0.013000000000000001 316
+0.016 316
+0.019 316
+0.022 316
+0.024999999999999998 316
+0.027999999999999997 316
+0.030999999999999996 315
+0.033999999999999996 315
+0.037 311
+0.04 303
+0.043000000000000003 285
+0.046000000000000006 267
+0.04900000000000001 257
