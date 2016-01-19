@@ -101,6 +101,38 @@ public class Individual {
 		return f.trueClauses(chromosome)+f.weightedSum(chromosome);
 	}
 	
+	public int getWeightedSum(Formula f){
+		return f.weightedSum(chromosome);
+	}
+	
+	int dist(Individual ind) throws Exception{
+		int d = 0;
+		
+		for(int i = 0; i < chromosome.size(); i++){
+			if(chromosome.get(i) != ind.getChromosomeElem(i)){
+				d++;
+			}
+		}
+		
+		return d;
+	}
+	
+	int sumOfNeighbors(List<Individual> ind, int threshold) throws Exception{
+		int same = 0;
+		
+		for(Individual i: ind){
+			if(dist(i) < threshold){
+				same++;
+			}
+		}
+		
+		return same;
+	}
+	public int getSharedFitness(Formula f, List<Individual> ind, int threshold) throws Exception{
+		
+		return getFitness(f)/sumOfNeighbors(ind,threshold);
+	}
+	
 	public int size(){
 		return chromosome.size();
 	}
