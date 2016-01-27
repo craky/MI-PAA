@@ -57,5 +57,14 @@ public class IndividualTest {
 		Individual i = new Individual(chrom);
 		assertEquals(i.getFitness(f),14);
 	}
+	
+	@Test
+	public void testChangingChromo() throws Exception{
+		Individual i = new Individual(5);
+		i.setChromosomeElem(2, 1);
+		assertEquals(i.getChromosomeElem(2),1);
+		i.setChromosomeElem(2, 0);
+		assertEquals(i.getChromosomeElem(2),0);
+	}
 
 }

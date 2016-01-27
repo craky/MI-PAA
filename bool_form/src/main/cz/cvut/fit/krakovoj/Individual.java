@@ -142,4 +142,12 @@ public class Individual {
 			chromosome.set(i,source.getChromosomeElem(i));
 		}
 	}
+	
+	public void setChromosomeElem(int elem, int val){
+		chromosome.set(elem, val);
+	}
+	
+	public List<Integer> getChromo(){
+		return chromosome;
+	}
 }
