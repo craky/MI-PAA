@@ -11,6 +11,7 @@ import java.io.IOException;
  */
 public class BruteForce {
 	private Individual bestSolution;
+	private int sumOfResolving = 0;
 	private Formula formula = new Formula();
 	
 	BruteForce(String fileName){
@@ -32,12 +33,16 @@ public class BruteForce {
 		size--;
 		
 		state.setChromosomeElem(size, 1);
+		if(formula.eval(state.getChromo()))
+			sumOfResolving++;
 		if((bestSolution.getWeightedSum(formula) < state.getWeightedSum(formula)) && formula.eval(state.getChromo()) ){
 			bestSolution = state.clone();
 		}
 		solveBruteForce(state,size);
 		
 		state.setChromosomeElem(size, 0);
+		if(formula.eval(state.getChromo()))
+			sumOfResolving++;
 		if((bestSolution.getWeightedSum(formula) < state.getWeightedSum(formula)) && formula.eval(state.getChromo())){
 			bestSolution = state.clone();
 		}
@@ -45,7 +50,7 @@ public class BruteForce {
 	}
 	
 	public int bestSolution(){
-		System.out.println("Best solution is " + bestSolution.getWeightedSum(formula));
+		System.out.println("Best solution is " + bestSolution.getWeightedSum(formula) + "Sum of resolving " + sumOfResolving);
 		return bestSolution.getWeightedSum(formula);
 	}
 	
