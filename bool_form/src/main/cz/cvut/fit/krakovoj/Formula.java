@@ -59,6 +59,9 @@ public class Formula {
 		
 		//First line are sums of literals & formulas
 		line = br.readLine();
+		line = br.readLine();
+		line = br.readLine();
+		line = br.readLine();
 		//read line with weights
 		line = br.readLine();
 		parseWeights(line);
