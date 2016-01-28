@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm {
-	public int populationSize = 35;
+	public int populationSize = 30;
 	public double crossoverProbability = 0.7;
-	public double mutationProbability = 0.01;
+	public double mutationProbability = 0.028;
 	public int maxGeneration = 500;
 	public int maxGenerationWithoutImprovement = maxGeneration / 4;
 	public int tournamentCapacity = 5;
@@ -101,10 +101,17 @@ public class GeneticAlgorithm {
 		Individual parent_1 = tournament(tournamentCapacity);
 		Individual parent_2 = tournament(tournamentCapacity);		
 		
-		if(java.lang.Double.compare(rand.nextDouble(),crossoverProbability) <= 0){
+		//if(java.lang.Double.compare(rand.nextDouble(),crossoverProbability) <= 0){
+			//parent_1.doCrossover(0,formula.getSumOfLiterals() / 2,parent_2);
+			//parent_2.doCrossover(formula.getSumOfLiterals() / 2, formula.getSumOfLiterals(), parent_1);
+		//}
+		
+		if(java.lang.Double.compare(rand.nextDouble(),parent_1.crossoverProbability(population.get(rand.nextInt(population.size())).getFitness(formula),
+				getBestFitness(), getWorstFitness(), formula)) <= 0)
 			parent_1.doCrossover(0,formula.getSumOfLiterals() / 2,parent_2);
+		if(java.lang.Double.compare(rand.nextDouble(),parent_2.crossoverProbability(population.get(rand.nextInt(population.size())).getFitness(formula),
+				getBestFitness(), getWorstFitness(), formula)) <= 0)
 			parent_2.doCrossover(formula.getSumOfLiterals() / 2, formula.getSumOfLiterals(), parent_1);
-		}
 		
 		parent_1.mutate(mutationProbability);
 		parent_2.mutate(mutationProbability);
@@ -154,6 +161,15 @@ public class GeneticAlgorithm {
 		int result = population.get(0).getFitness(formula);
 		for(Individual individual : population){
 			result = individual.getFitness(formula) > result ? individual.getFitness(formula) : result;
+		}
+		
+		return result;
+	}
+	
+	public int getWorstFitness() throws Exception{
+		int result = population.get(0).getFitness(formula);
+		for(Individual individual : population){
+			result = individual.getFitness(formula) < result ? individual.getFitness(formula) : result;
 		}
 		
 		return result;
