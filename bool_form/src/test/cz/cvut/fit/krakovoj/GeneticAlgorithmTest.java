@@ -8,16 +8,17 @@ public class GeneticAlgorithmTest {
 
 	@Test
 	public void test() throws Exception {		
-		int sum = 0;
-		double mutation = 0.001;
+		int sum = 0, result = 0;
+		double mutation = 0.000;
 		//assertEquals(g.getPopulationSize(),20);
-		for(int j = 1; j < 50; j++){
-			for(int i = 0; i < 100; i++){
-				GeneticAlgorithm g = new GeneticAlgorithm("bool_form/data/unsat_1_/40_125_25.dat");
+		for(int j = 1; j < 101; j++){
+			for(int i = 0; i < 10; i++){
+				GeneticAlgorithm g = new GeneticAlgorithm("/home/craa/Dropbox/ČVUT/Magistr/3_semestr/mi-paa/5_ukol/120_150_20.dat");
 				sum += g.run(mutation);				
 			}
-			System.out.println( mutation + " " + sum/100);
-			mutation += 0.001;
+			result = sum/10;
+			System.out.println( mutation + " " + result + " " + (double) (((39.0-(double)result)/39.0)*100.0) + "%" );
+			mutation += 0.005;
 			sum = 0;
 		}
 		

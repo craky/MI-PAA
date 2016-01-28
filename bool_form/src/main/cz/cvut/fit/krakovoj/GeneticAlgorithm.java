@@ -6,16 +6,19 @@ import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm {
-	public int populationSize = 30;
+	public int populationSize = 130;
 	public double crossoverProbability = 0.7;
 	public double mutationProbability = 0.028;
-	public int maxGeneration = 500;
+	public int maxGeneration = 600;
 	public int maxGenerationWithoutImprovement = maxGeneration / 4;
 	public int tournamentCapacity = 5;
 	public int sharedFitnessThreshold = 1;
 	
 	private List<Individual> population = new ArrayList<Individual>();
 	private List<Individual> newPopulation = new ArrayList<Individual>();
+	
+	private int bestFit = 0;
+	private int worstFit = 0;
 	
 	private int generationCount = 0;
 	private int withoutChange = 0;
@@ -107,10 +110,10 @@ public class GeneticAlgorithm {
 		//}
 		
 		if(java.lang.Double.compare(rand.nextDouble(),parent_1.crossoverProbability(population.get(rand.nextInt(population.size())).getFitness(formula),
-				getBestFitness(), getWorstFitness(), formula)) <= 0)
+				bestFit, worstFit, formula)) <= 0)
 			parent_1.doCrossover(0,formula.getSumOfLiterals() / 2,parent_2);
 		if(java.lang.Double.compare(rand.nextDouble(),parent_2.crossoverProbability(population.get(rand.nextInt(population.size())).getFitness(formula),
-				getBestFitness(), getWorstFitness(), formula)) <= 0)
+				bestFit, worstFit, formula)) <= 0)
 			parent_2.doCrossover(formula.getSumOfLiterals() / 2, formula.getSumOfLiterals(), parent_1);
 		
 		parent_1.mutate(mutationProbability);
@@ -123,7 +126,9 @@ public class GeneticAlgorithm {
 		mutationProbability = threshold;
 		generationCount = 0;
 		int bestFitness = population.get(0).getFitness(formula), tmpBestFit = population.get(0).getFitness(formula);
-		while (withoutChange < maxGenerationWithoutImprovement && generationCount < maxGeneration){		
+		while (withoutChange < maxGenerationWithoutImprovement && generationCount < maxGeneration){	
+			bestFit = getBestFitness();
+			worstFit = getWorstFitness();
 			for(int i = 0; i < populationSize; i+=2){
 				crossoverAndMutate();
 			}
