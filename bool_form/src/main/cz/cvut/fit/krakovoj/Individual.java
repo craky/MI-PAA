@@ -15,6 +15,7 @@ import java.util.Random;
  */
 public class Individual {
 	private List<Integer> chromosome = new ArrayList<Integer>();
+	private double crossoverProbability = 0.7;
 	
 	public Individual(int length){
 		if(length < 0){
@@ -41,6 +42,20 @@ public class Individual {
 	
 	public Individual(List<Integer> chrom){
 		chromosome.addAll(chrom);
+	}
+	
+	public double crossoverProbability(int oponentsFitness,int maxFitness, int minFitness, Formula f){
+		int factor = 1, dividend = 1;
+		
+		if(maxFitness != minFitness)
+			factor = maxFitness - minFitness;
+		dividend = oponentsFitness - getFitness(f);
+		if(dividend < 0)
+			dividend *= (-1);
+		
+		crossoverProbability = dividend / factor;
+		
+		return crossoverProbability;
 	}
 	
 	public int getChromosomeElem(int position) throws Exception{
