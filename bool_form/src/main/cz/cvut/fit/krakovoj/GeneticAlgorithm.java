@@ -122,8 +122,8 @@ public class GeneticAlgorithm {
 		newPopulation.add(parent_2.clone());
 	}
 	
-	public int run(double threshold) throws Exception{
-		mutationProbability = threshold;
+	public int run(int threshold) throws Exception{
+		maxGeneration = threshold;
 		generationCount = 0;
 		int bestFitness = population.get(0).getFitness(formula), tmpBestFit = population.get(0).getFitness(formula);
 		while (withoutChange < maxGenerationWithoutImprovement && generationCount < maxGeneration){	
