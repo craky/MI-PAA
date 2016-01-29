@@ -11,7 +11,7 @@ public class GeneticAlgorithm {
 	public double mutationProbability = 0.028;
 	public int maxGeneration = 600;
 	public int maxGenerationWithoutImprovement = maxGeneration / 4;
-	public int tournamentCapacity = 5;
+	public int tournamentCapacity = 65;
 	public int sharedFitnessThreshold = 1;
 	
 	private List<Individual> population = new ArrayList<Individual>();
